@@ -1,0 +1,37 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: linter-pipeline
+spec:
+  params:
+    - name: source-repo
+      type: string
+      description: Source code repository
+      default: https://github.com/vinamra28/tekton-linter-test
+    - name: git-revision
+      type: string
+      description: Revision in git repo
+      default: main
+- name: fetch-repository
+      taskRef:
+        kind: ClusterTask
+        name: git-clone 
+      workspaces:
+        - name: output
+          workspace: shared-workspace
+  params:
+        - name: url
+          value: "$(params.source-repo)"
+        - name: revision
+          value: $(params.git-revision)
+    - name: md-lint-run #lint mardown
+      taskRef:
+        name: markdown-lint
+      runAfter:
+        - fetch-repository
+      workspaces:
+        - name: shared-workspace
+          workspace: shared-workspace
+      params:
+        - name: args
+          value: ["."]
