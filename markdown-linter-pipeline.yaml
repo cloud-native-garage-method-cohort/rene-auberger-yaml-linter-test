@@ -19,7 +19,7 @@ spec:
     - name: fetch-repository
       taskRef:
         kind: ClusterTask
-        name: git-clone 
+        name: git-clone
       workspaces:
         - name: output
           workspace: shared-workspace
@@ -28,7 +28,7 @@ spec:
           value: "$(params.source-repo)"
         - name: revision
           value: $(params.git-revision)
-    - name: md-lint-run #lint mardown
+    - name: md-lint-run    # lint mardown
       taskRef:
         name: markdown-lint
       runAfter:
@@ -39,4 +39,3 @@ spec:
       params:
         - name: args
           value: ["."]
-          
